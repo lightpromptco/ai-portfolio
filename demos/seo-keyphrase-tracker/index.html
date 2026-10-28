@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SEO Keyphrase Tracker — Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --bg:#f4f5f3;--surface:#fcfcfb;--ink:#17201d;--ink-2:#4a5653;--ink-3:#6b7672;
+  --line:#e1e0d9;--axis:#c3c2b7;--accent:#1f5a4c;--accent-ink:#ffffff;--chip:#e9eeeb;
+  --good:#0ca30c;--ok:#fab219;--bad:#d03b3b;--none:#a8a69c;--series:#2a6fdb;
+  --banner:#fff6e0;--banner-line:#f1d48a;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121312;--surface:#1a1a19;--ink:#ecece8;--ink-2:#b9bab4;--ink-3:#93948f;
+    --line:#2c2c2a;--axis:#383835;--accent:#7cc4b0;--accent-ink:#0f1a17;--chip:#242624;
+    --none:#6b6a64;--series:#6aa1f5;--banner:#2b2617;--banner-line:#5c4a1c;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121312;--surface:#1a1a19;--ink:#ecece8;--ink-2:#b9bab4;--ink-3:#93948f;
+  --line:#2c2c2a;--axis:#383835;--accent:#7cc4b0;--accent-ink:#0f1a17;--chip:#242624;
+  --none:#6b6a64;--series:#6aa1f5;--banner:#2b2617;--banner-line:#5c4a1c;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Figtree,system-ui,sans-serif;font-size:15px;line-height:1.5}
+.wrap{max-width:1180px;margin:0 auto;padding:24px 16px 64px}
+.demo-flag{background:var(--accent);color:var(--accent-ink);text-align:center;font-size:13px;font-weight:600;padding:8px 16px}
+header h1{margin:0;font-size:28px;letter-spacing:-.01em}
+header p{margin:4px 0 0;color:var(--ink-3);font-size:14px}
+.pills{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+.pill{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:4px 12px;font-size:13px;color:var(--ink-2)}
+.dot{width:8px;height:8px;border-radius:50%}
+.tabs{display:flex;gap:4px;overflow-x:auto;border-bottom:1px solid var(--line);margin:8px 0 20px}
+.tabs button{appearance:none;border:0;background:none;color:var(--ink-2);font:inherit;font-weight:600;padding:12px 14px;min-height:44px;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.banner{background:var(--banner);border:1px solid var(--banner-line);border-radius:12px;padding:12px 16px;font-size:14px;margin-bottom:20px}
+.grid-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:20px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px}
+.stat .n{font-size:32px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.stat .l{font-size:13px;color:var(--ink-2)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:16px}
+h2{font-size:18px;margin:0 0 4px}
+.sub{color:var(--ink-3);font-size:13px;margin:0 0 14px}
+.barrow{display:grid;grid-template-columns:56px 1fr;gap:10px;align-items:center;margin:8px 0}
+.barrow .k{font-size:13px;color:var(--ink-2)}
+.stack{display:flex;gap:2px;height:28px}
+.seg{height:100%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#fff;min-width:0;overflow:hidden;position:relative}
+.seg:first-child{border-radius:4px 0 0 4px}.seg:last-child{border-radius:0 4px 4px 0}
+.seg.ok{color:#0b0b0b}
+.seg:hover{filter:brightness(1.08)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:13px;color:var(--ink-2);margin-top:12px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:10px;height:10px;border-radius:2px;display:inline-block}
+.tip{position:fixed;pointer-events:none;background:var(--ink);color:var(--surface);font-size:12px;padding:6px 10px;border-radius:6px;opacity:0;transition:opacity .1s;z-index:10;max-width:240px}
+.issue{border-top:1px solid var(--line);padding:14px 0;display:grid;gap:4px}
+.issue:first-of-type{border-top:0}
+.tag{display:inline-block;font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--chip);color:var(--ink-2);margin-right:6px}
+.issue h3{margin:0;font-size:15px}
+.issue p{margin:0;color:var(--ink-2);font-size:14px}
+.urls{font-size:13px;color:var(--ink-3);word-break:break-all}
+.tbox{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--ink-3);cursor:pointer;user-select:none;background:var(--surface);position:sticky;top:0}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.score{display:inline-flex;align-items:center;gap:6px}
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.filters select,.filters input{font:inherit;font-size:14px;min-height:44px;padding:0 12px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.dup{color:var(--bad);font-weight:600}
+svg text{fill:var(--ink-3);font-size:11px;font-family:Figtree,system-ui,sans-serif}
+.hidden{display:none}
+footer{margin-top:32px;font-size:13px;color:var(--ink-3)}
+</style>
+</head>
+<body>
+<div class="demo-flag">Demo — Brightline Home Services is a made-up company. All data is sample data.</div>
+<div class="wrap">
+<header>
+  <h1>SEO Keyphrase Tracker</h1>
+  <p>brightlinehome.example · Updated Oct 22, 2026</p>
+</header>
+<div class="pills" id="pills"></div>
+<nav class="tabs" role="tablist" aria-label="Dashboard sections">
+  <button role="tab" aria-selected="true" data-tab="overview">Overview</button>
+  <button role="tab" aria-selected="false" data-tab="gaps">Gaps &amp; recommendations</button>
+  <button role="tab" aria-selected="false" data-tab="map">Keyword map</button>
+  <button role="tab" aria-selected="false" data-tab="pages">Pages &amp; posts</button>
+  <button role="tab" aria-selected="false" data-tab="rankings">Rankings</button>
+</nav>
+
+<section data-panel="overview">
+  <div class="banner">Rankings are from the Oct 14 pull — the Oct 22 Semrush refresh was skipped (API units ran out). Content, scores and links are current as of Oct 22.</div>
+  <div class="grid-stats" id="stats"></div>
+  <div class="cols">
+    <div class="card">
+      <h2>How published content scores</h2>
+      <p class="sub">Yoast SEO and readability scores, pages vs posts</p>
+      <div id="scorebars"></div>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--good)"></i>Good</span>
+        <span><i class="sw" style="background:var(--ok)"></i>OK</span>
+        <span><i class="sw" style="background:var(--bad)"></i>Needs improvement</span>
+        <span><i class="sw" style="background:var(--none)"></i>No keyphrase</span>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Keyphrases on Google page 1</h2>
+      <p class="sub">Tracked keyphrases ranking 1–10, last 6 months</p>
+      <div id="trend"></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <h2>Summary</h2>
+    <p class="sub">Written from this month's data</p>
+    <p id="summary" style="margin:0"></p>
+  </div>
+</section>
+
+<section data-panel="gaps" class="hidden">
+  <div class="card" id="gaps"></div>
+</section>
+
+<section data-panel="map" class="hidden">
+  <p class="sub">Each focus keyphrase and the pages that target it. Keyphrases in red are assigned to more than one page.</p>
+  <div class="tbox"><table id="maptable"></table></div>
+</section>
+
+<section data-panel="pages" class="hidden">
+  <div class="filters">
+    <label class="sr" for="ftype" style="position:absolute;left:-9999px">Type</label>
+    <select id="ftype"><option value="">All types</option><option>Page</option><option>Post</option></select>
+    <label for="fscore" style="position:absolute;left:-9999px">SEO score</label>
+    <select id="fscore"><option value="">All SEO scores</option><option>Good</option><option>OK</option><option>Needs improvement</option><option>No keyphrase</option></select>
+    <label for="fq" style="position:absolute;left:-9999px">Search</label>
+    <input id="fq" type="search" placeholder="Search title or keyphrase">
+  </div>
+  <div class="tbox"><table id="pagetable"></table></div>
+</section>
+
+<section data-panel="rankings" class="hidden">
+  <div class="grid-stats" id="rankstats"></div>
+  <div class="tbox"><table id="ranktable"></table></div>
+</section>
+
+<footer>Built with the SEO Keyphrase Tracker skill. Sources in a live version: WordPress + Yoast, Google Search Console or Semrush, HubSpot.</footer>
+</div>
+<div class="tip" id="tip" role="tooltip"></div>
+
+<script>
+// ---------- Sample data (fictional) ----------
+let seed = 7;
+const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+const pick = a => a[Math.floor(rnd() * a.length)];
+
+const pages = [
+  ['Home','home services cedar falls'],['AC Repair','ac repair cedar falls'],['Furnace Repair','furnace repair'],
+  ['Water Heater Installation','water heater installation'],['Drain Cleaning','drain cleaning'],['Emergency Plumber','emergency plumber'],
+  ['HVAC Maintenance Plans','hvac maintenance plan'],['Heat Pump Installation','heat pump installation'],['Leak Detection','leak detection'],
+  ['Sewer Line Repair','sewer line repair'],['Electrical Panel Upgrade','electrical panel upgrade'],['Indoor Air Quality','indoor air quality'],
+  ['Ductless Mini Splits','ductless mini split'],['Tankless Water Heaters','tankless water heater'],['Commercial HVAC','commercial hvac'],
+  ['Financing','hvac financing'],['Reviews',''],['About Us',''],['Careers',''],['Contact',''],
+  ['Service Area: Riverton','ac repair cedar falls'],['Service Area: Oak Hill','plumber oak hill'],['Coupons',''],['Water Softeners','water softener installation']
+];
+const postTopics = [
+  'how often to replace hvac filter','signs your furnace is failing','tankless water heater','ac not blowing cold air',
+  'why is my water heater making noise','drain cleaning','heat pump vs furnace','how to lower your energy bill',
+  'emergency plumber','frozen pipes','smart thermostat','indoor air quality','ductless mini split','sump pump maintenance',
+  'water softener benefits','hvac maintenance plan','how long does an ac last','garbage disposal repair','furnace repair',
+  'carbon monoxide safety','toilet keeps running','low water pressure','ac repair cedar falls','spring hvac checklist',
+  'fall furnace tune up','energy efficient upgrades','leak detection','sewer line repair','whole home generator','attic insulation'
+];
+const items = [];
+pages.forEach(([t,k],i)=>items.push({title:t,type:'Page',kp:k,url:'/'+t.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')+'/'}));
+for(let i=0;i<88;i++){
+  const topic = postTopics[i % postTopics.length];
+  const hasKp = rnd() > 0.2;
+  const title = topic.charAt(0).toUpperCase()+topic.slice(1) + (i>=postTopics.length ? ' — '+pick(['Guide','FAQ','Tips','Checklist','2026 Update']) : '');
+  const variant = i>=postTopics.length && rnd()>0.3 ? topic+' '+pick(['cost','tips','guide','checklist','faq','diy','signs','near me']) : topic;
+  items.push({title,type:'Post',kp:hasKp?variant:'',url:'/blog/'+title.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')+'/'});
+}
+items.forEach(it=>{
+  it.words = it.type==='Page' ? 400+Math.floor(rnd()*900) : 600+Math.floor(rnd()*1400);
+  if(!it.kp){ it.seo='No keyphrase'; }
+  else { const r=rnd(); it.seo = r<0.55?'Good':r<0.82?'OK':'Needs improvement'; }
+  const r2=rnd(); it.read = r2<0.5?'Good':r2<0.75?'OK':r2<0.92?'Needs improvement':'No keyphrase';
+  it.inbound = rnd()<0.32 ? 0 : 1+Math.floor(rnd()*14);
+  it.noindex = ['Careers','Coupons'].includes(it.title);
+});
+
+// Rankings: tracked keyphrases (subset of distinct keyphrases)
+const distinct = [...new Set(items.map(i=>i.kp).filter(Boolean))];
+const tracked = distinct.slice(0, 36).map(k=>{
+  const r=rnd(); const pos = r<0.22?1+Math.floor(rnd()*10): r<0.45?11+Math.floor(rnd()*10): r<0.75?21+Math.floor(rnd()*80): null;
+  const prev = pos==null?null:Math.max(1,pos+Math.round((rnd()-0.5)*8));
+  return {kp:k,pos,prev,vol:[30,50,90,140,210,320,480,720][Math.floor(rnd()*8)],kd:10+Math.floor(rnd()*55)};
+});
+const trendMonths = ['May','Jun','Jul','Aug','Sep','Oct'];
+const page1Now = tracked.filter(t=>t.pos && t.pos<=10).length;
+const trendVals = [Math.max(1,page1Now-4),Math.max(1,page1Now-4),Math.max(1,page1Now-3),Math.max(1,page1Now-2),page1Now-1,page1Now];
+
+// ---------- Computed metrics ----------
+const P = items.filter(i=>i.type==='Page').length, Po = items.length-P;
+const withKp = items.filter(i=>i.kp).length;
+const good = items.filter(i=>i.seo==='Good').length;
+const orphans = items.filter(i=>!i.noindex && i.inbound===0);
+const kpCount = {}; items.forEach(i=>{ if(i.kp) (kpCount[i.kp] ||= []).push(i); });
+const dupes = Object.entries(kpCount).filter(([,v])=>v.length>1).sort((a,b)=>b[1].length-a[1].length);
+const pageViews = 3184, leads = 41;
+const pct = (a,b)=>Math.round(a/b*100);
+
+// ---------- Render ----------
+const $ = s=>document.querySelector(s);
+const esc = s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+$('#pills').innerHTML = [
+  ['var(--good)',`WordPress · ${items.length} items · Oct 22`],
+  ['var(--ok)',`Semrush · ${tracked.length} keyphrases · Oct 14 (stale)`],
+  ['var(--good)','HubSpot · Sep 22–Oct 21']
+].map(([c,t])=>`<span class="pill"><i class="dot" style="background:${c}"></i>${t}</span>`).join('');
+
+const stats = [
+  [items.length,`Published (${P} pages, ${Po} posts)`],
+  [pct(withKp,items.length)+'%',`Have a focus keyphrase (${withKp})`],
+  [distinct.length,'Distinct focus keyphrases'],
+  [pct(good,items.length)+'%',`Yoast SEO "Good" (${good})`],
+  [orphans.length,'Indexable items with no inbound links'],
+  [`${page1Now}/${tracked.length}`,'Tracked keyphrases on Google page 1'],
+  [pageViews.toLocaleString(),'Page views, last 30 days'],
+  [leads,'Form submissions, last 30 days']
+];
+$('#stats').innerHTML = stats.map(([n,l])=>`<div class="card stat"><div class="n">${n}</div><div class="l">${l}</div></div>`).join('');
+
+const cats = [['Good','var(--good)',''],['OK','var(--ok)','ok'],['Needs improvement','var(--bad)',''],['No keyphrase','var(--none)','']];
+function stackRow(label, list, field, metric){
+  const total = list.length;
+  const segs = cats.map(([c,col,cls])=>{
+    const n = list.filter(i=>i[field]===c).length; if(!n) return '';
+    const w = n/total*100;
+    return `<div class="seg ${cls}" style="flex:${w} 1 0;background:${col}" data-tip="${metric} · ${label}: ${c} — ${n} of ${total} (${Math.round(w)}%)">${w>=8?n:''}</div>`;
+  }).join('');
+  return `<div class="barrow"><div class="k">${label}</div><div class="stack">${segs}</div></div>`;
+}
+const pg = items.filter(i=>i.type==='Page'), ps = items.filter(i=>i.type==='Post');
+$('#scorebars').innerHTML =
+  '<p class="sub" style="margin:4px 0 0;font-weight:600">SEO score</p>'+stackRow('Pages',pg,'seo','SEO')+stackRow('Posts',ps,'seo','SEO')+
+  '<p class="sub" style="margin:14px 0 0;font-weight:600">Readability</p>'+stackRow('Pages',pg,'read','Readability')+stackRow('Posts',ps,'read','Readability');
+
+// Trend line (single series)
+(function(){
+  const W=520,H=200,l=32,r=12,t=14,b=26, max=Math.max(...trendVals)+2;
+  const x=i=>l+i*(W-l-r)/(trendVals.length-1), y=v=>t+(H-t-b)*(1-v/max);
+  let g='';
+  for(let v=0;v<=max;v+=Math.ceil(max/4)){ g+=`<line x1="${l}" x2="${W-r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="${l-8}" y="${y(v)+4}" text-anchor="end">${v}</text>`; }
+  const pts=trendVals.map((v,i)=>`${x(i)},${y(v)}`).join(' ');
+  const dots=trendVals.map((v,i)=>`<circle cx="${x(i)}" cy="${y(v)}" r="5" fill="var(--series)" stroke="var(--surface)" stroke-width="2"/><rect x="${x(i)-20}" y="${t}" width="40" height="${H-t-b}" fill="transparent" data-tip="${trendMonths[i]}: ${v} keyphrases on page 1"/>`).join('');
+  const labels=trendMonths.map((m,i)=>`<text x="${x(i)}" y="${H-6}" text-anchor="middle">${m}</text>`).join('');
+  $('#trend').innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="Keyphrases on Google page 1 rose from ${trendVals[0]} in May to ${trendVals[5]} in October">${g}<line x1="${l}" x2="${W-r}" y1="${y(0)}" y2="${y(0)}" stroke="var(--axis)"/><polyline points="${pts}" fill="none" stroke="var(--series)" stroke-width="2" stroke-linejoin="round"/>${dots}${labels}<text x="${x(5)}" y="${y(trendVals[5])-12}" text-anchor="middle" style="fill:var(--ink);font-weight:600">${trendVals[5]}</text></svg>`;
+})();
+
+const quick = tracked.filter(t=>t.pos>=11 && t.pos<=20);
+const missing = items.filter(i=>!i.kp && !i.noindex && !['Contact','About Us','Reviews'].includes(i.title));
+const topDupe = dupes[0];
+$('#summary').innerHTML = `${items.length} published items, ${withKp} (${pct(withKp,items.length)}%) with a focus keyphrase across ${distinct.length} distinct keyphrases. The biggest issue is keyphrase overlap: <b>${dupes.length} keyphrases</b> are assigned to more than one page, led by <b>${esc(topDupe[0])}</b> (${topDupe[1].length} items competing). ${orphans.length} indexable items have no internal links pointing to them, and ${quick.length} tracked keyphrases sit on page 2 — the fastest wins available.`;
+
+// Gaps
+const gap = (tag,title,desc,urls)=>`<div class="issue"><div><span class="tag">${tag}</span></div><h3>${title}</h3><p>${desc}</p>${urls?`<div class="urls">${urls}</div>`:''}</div>`;
+let gh = '<h2>Gaps &amp; recommendations</h2><p class="sub">Prioritized from this month\'s data</p>';
+dupes.slice(0,4).forEach(([k,v])=>{ gh+=gap('Cannibalization',`${v.length} items target "${esc(k)}"`,`Pick one owner page (usually the service page), then re-target the others to related long-tail keyphrases and link them to the owner page.`,v.map(i=>esc(i.url)).join(' · ')); });
+gh+=gap('Quick wins',`${quick.length} keyphrases ranking 11–20`,'Refresh these pages and add 2–3 internal links each to push them onto page 1.',quick.map(t=>`${esc(t.kp)} (#${t.pos})`).join(' · '));
+gh+=gap('Orphan pages',`${orphans.length} indexable items have no inbound links`,'Link to each from 2–3 related pages so search engines and visitors can find them.',orphans.slice(0,8).map(i=>esc(i.url)).join(' · ')+(orphans.length>8?` · +${orphans.length-8} more`:''));
+gh+=gap('Missing keyphrases',`${missing.length} indexable items have no focus keyphrase`,'Assign one unique keyphrase to each so it can be scored and tracked.',missing.slice(0,8).map(i=>esc(i.url)).join(' · ')+(missing.length>8?` · +${missing.length-8} more`:''));
+$('#gaps').innerHTML = gh;
+
+// Keyword map
+$('#maptable').innerHTML = '<thead><tr><th>Keyphrase</th><th class="num">Items</th><th>URLs</th></tr></thead><tbody>'+
+  Object.entries(kpCount).sort((a,b)=>b[1].length-a[1].length||a[0].localeCompare(b[0])).map(([k,v])=>
+  `<tr><td class="${v.length>1?'dup':''}">${esc(k)}</td><td class="num">${v.length}</td><td>${v.map(i=>esc(i.url)).join('<br>')}</td></tr>`).join('')+'</tbody>';
+
+// Pages table
+const colOf = {Good:'var(--good)',OK:'var(--ok)','Needs improvement':'var(--bad)','No keyphrase':'var(--none)'};
+let sortKey='title', sortDir=1;
+function renderPages(){
+  const ft=$('#ftype').value, fs=$('#fscore').value, q=$('#fq').value.toLowerCase();
+  const rows = items.filter(i=>(!ft||i.type===ft)&&(!fs||i.seo===fs)&&(!q||(i.title+' '+i.kp).toLowerCase().includes(q)))
+    .sort((a,b)=>{const A=a[sortKey],B=b[sortKey];return (typeof A==='number'?A-B:String(A).localeCompare(String(B)))*sortDir;});
+  const cols=[['title','Title'],['type','Type'],['kp','Focus keyphrase'],['seo','SEO score'],['read','Readability'],['words','Words',1],['inbound','Inbound links',1]];
+  $('#pagetable').innerHTML='<thead><tr>'+cols.map(([k,l,n])=>`<th class="${n?'num':''}" data-k="${k}" aria-sort="${sortKey===k?(sortDir>0?'ascending':'descending'):'none'}">${l}</th>`).join('')+'</tr></thead><tbody>'+
+    rows.map(i=>`<tr><td>${esc(i.title)}</td><td>${i.type}</td><td>${esc(i.kp)||'<span style="color:var(--ink-3)">—</span>'}</td><td><span class="score"><i class="sw" style="background:${colOf[i.seo]}"></i>${i.seo}</span></td><td><span class="score"><i class="sw" style="background:${colOf[i.read]}"></i>${i.read==='No keyphrase'?'Not analyzed':i.read}</span></td><td class="num">${i.words.toLocaleString()}</td><td class="num">${i.inbound}</td></tr>`).join('')+'</tbody>';
+  document.querySelectorAll('#pagetable th').forEach(th=>th.onclick=()=>{const k=th.dataset.k; sortDir = sortKey===k?-sortDir:1; sortKey=k; renderPages();});
+}
+['#ftype','#fscore','#fq'].forEach(s=>$(s).addEventListener('input',renderPages));
+renderPages();
+
+// Rankings
+const ranked = tracked.filter(t=>t.pos);
+$('#rankstats').innerHTML = [[page1Now,'In top 10'],[ranked.filter(t=>t.pos<=100).length,'In top 100'],[quick.length,'On page 2 (11–20)'],[tracked.length-ranked.length,'Not ranking']]
+  .map(([n,l])=>`<div class="card stat"><div class="n">${n}</div><div class="l">${l}</div></div>`).join('');
+$('#ranktable').innerHTML='<thead><tr><th>Keyphrase</th><th class="num">Position</th><th class="num">Change</th><th class="num">Volume</th><th class="num">Difficulty</th></tr></thead><tbody>'+
+  [...tracked].sort((a,b)=>(a.pos??999)-(b.pos??999)).map(t=>{
+    const ch = t.pos&&t.prev ? t.prev-t.pos : null;
+    const chs = ch==null?'—':ch>0?`▲ ${ch}`:ch<0?`▼ ${-ch}`:'0';
+    return `<tr><td>${esc(t.kp)}</td><td class="num">${t.pos??'—'}</td><td class="num">${chs}</td><td class="num">${t.vol}</td><td class="num">${t.kd}</td></tr>`;}).join('')+'</tbody>';
+
+// Tabs
+document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>{
+  document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));
+  document.querySelectorAll('[data-panel]').forEach(p=>p.classList.toggle('hidden',p.dataset.panel!==b.dataset.tab));
+}));
+
+// Tooltips
+const tip=$('#tip');
+document.addEventListener('mousemove',e=>{
+  const t=e.target.closest('[data-tip]');
+  if(!t){tip.style.opacity=0;return;}
+  tip.textContent=t.dataset.tip; tip.style.opacity=1;
+  tip.style.left=Math.min(e.clientX+12,innerWidth-250)+'px'; tip.style.top=(e.clientY+14)+'px';
+});
+</script>
+</body>
+</html>
