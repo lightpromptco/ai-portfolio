@@ -4,18 +4,16 @@ I turn messy, manual operations into documented, AI-assisted workflows, and I co
 
 My background is **construction project management** and **graphic design**. I now work on **AI adoption and process improvement** at a CMMC compliance consulting firm. I've also built and shipped my own AI products.
 
-📍 Austin, TX area · 💼 [LinkedIn — ADD LINK] · ✉️ [EMAIL — ADD]
+📍 Austin, TX area
 
 ---
 
 ## What I can do for a team
 
-| | |
-|---|---|
-| **Coordinate AI projects** | Act as the go-between for subject-matter experts, builders, and leadership. Keep scope, owners, and dates visible. |
-| **Design AI workflows** | Map how work actually happens, then build Claude skills, connectors, and dashboards that take the repetitive parts off people's plates. |
-| **Document so it sticks** | Write SOPs and setup guides for people with zero prior experience in the tool. |
-| **Ship** | Take things from idea to something people can use: dashboards, apps, digital products, launch pages. |
+- **Coordinate AI projects.** Act as the go-between for subject-matter experts, builders, and leadership. Keep scope, owners, and dates visible.
+- **Design AI workflows.** Map how work actually happens, then build Claude skills, connectors, and dashboards that take the repetitive parts off people's plates.
+- **Document so it sticks.** Write SOPs and setup guides for people with zero prior experience in the tool.
+- **Ship.** Take things from idea to something people can use: dashboards, apps, digital products, launch pages.
 
 ---
 
